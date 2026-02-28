@@ -22,27 +22,30 @@ export async function POST(req: NextRequest) {
     - Destination: ${destination}
     - Duration: ${days} days
     - Number of People: ${people}
-    - Budget: $${budget} (Total budget for all ${people} people combined. Excludes initial flights, but INCLUDING local hotels, food, and local transit. Divide appropriately to see if realistic!)
+    - Budget: ₹${budget} INR (Total budget for all ${people} people combined. Excludes initial flights, but INCLUDING local hotels, food, and local transit. Divide appropriately to see if realistic!)
 
     INSTRUCTIONS FOR ITINERARY:
-    1. Introduction (budgetAnalysis): Explain if $${budget} across ${people} people for ${days} days is highly realistic, tight, or luxurious for this destination.
-    2. Accommodation (hotels): Recommend 2 specific hotels or neighborhoods fitting the budget. Include price per night and real rating. If budget is tight for ${people} people, suggest an Airbnb/Apartment instead.
+    1. Introduction (budgetAnalysis): Explain if ₹${budget} across ${people} people for ${days} days is highly realistic, tight, or luxurious for this destination.
+    2. Accommodation (hotels): Recommend 3 specific hotels or residential neighborhoods fitting the budget.
+       - They MUST be centrally located and near a major public transit/metro line, not on the remote outskirts.
+       - Include price per night (in ₹), real rating, and a short address/area name.
     3. Day-by-day Breakdown (itinerary):
-       - Group locations logically to minimize travel time. Include activity/meal costs for all ${people} people.
-       - IMPORTANT 'transportToNext' Logic: Provide the EXACT mode of travel from the PREVIOUS place.
-         - If distance < 1km: Suggest "Walk (X mins)". Cost = 0.
-         - If distance > 1km: Suggest "Metro/Bus (X mins)". Give the cost.
-         - ONLY if there's no metro, or splitting an Uber/Taxi is cheaper for ${people} people than individual tickets, suggest "Uber/Taxi (X mins)".
+       - IMPORTANT: Start Day 1 routing from the HIGHEST RATED hotel among the options you just recommended.
+       - Group locations logically to minimize travel time. Include activity/meal costs (in ₹) for all ${people} people.
+       - IMPORTANT 'transportToNext' Logic: Provide the EXACT mode of travel from the PREVIOUS place (or from the highest-rated hotel for the first place).
+         - If distance < 1km: Suggest "Walk (X mins)". Cost = ₹0.
+         - If distance > 1km: Suggest "Metro/Local Bus (X mins)". Give the cost in ₹.
+         - ONLY if there's no reliable local transport, or splitting an Uber/Auto/Taxi is cheaper for ${people} people, suggest "Uber/Auto/Taxi (X mins)". Give the cost in ₹.
     4. Local Culture (localCulture):
-       - foodToTry: List 3 authentic, famous local dishes (e.g., if Pune: "Misal Pav", "Vada Pav").
+       - foodToTry: List 3 authentic, famous local dishes including a SPECIFIC BRAND or RESTAURANT NAME (e.g., "Jogeshwari Misal in Pune", or "Shauryawada for non-veg").
        - eventsOrFestivals: List 1-2 local events/festivals happening during this season, or historic places directly tied to local culture.
 
     IMPORTANT FORMATTING OVERRIDE:
-    You MUST return your response as a valid JSON object ONLY. Do not wrap it in markdown block quotes. Use the EXACT following schema structure:
+    You MUST return your response as a valid JSON object ONLY. All estimated costs and prices MUST be integers (numbers, not strings with currency symbols). Do not wrap it in markdown block quotes. Use the EXACT following schema structure:
     {
       "budgetAnalysis": "Brief statement...",
       "hotels": [
-        { "name": "...", "pricePerNight": 100, "rating": 4.5, "description": "..." }
+        { "name": "...", "pricePerNight": 4000, "rating": 4.5, "description": "...", "shortAddress": "Near Metro Station, Area Name" }
       ],
       "itinerary": [
         {
@@ -52,16 +55,16 @@ export async function POST(req: NextRequest) {
             {
               "placeName": "...",
               "description": "...",
-              "estimatedCost": 20,
+              "estimatedCost": 1500,
               "rating": 4.8,
-              "transportToNext": "Walk (10 mins, 1km)",
-              "transportCost": 0
+              "transportToNext": "Uber/Auto (15 mins, 3km)",
+              "transportCost": 150
             }
           ]
         }
       ],
       "localCulture": {
-        "foodToTry": ["Dish 1", "Dish 2"],
+        "foodToTry": ["Dish at Brand Name", "Dish at Brand Name"],
         "eventsOrFestivals": ["Event 1"]
       }
     }

@@ -3,6 +3,7 @@ export interface Hotel {
   pricePerNight: number;
   rating: number;
   description: string;
+  shortAddress: string;
 }
 
 export interface Place {

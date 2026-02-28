@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Calendar, DollarSign, Sparkles, Loader2, Info, Users } from "lucide-react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { MapPin, Calendar, IndianRupee, Sparkles, Loader2, Info, Users } from "lucide-react";
 import { TripData } from "@/types/trip";
 import { HotelCard } from "./HotelCard";
 import { DayTimeline } from "./DayTimeline";
@@ -43,6 +43,19 @@ export default function TripForm() {
     }
   };
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto mt-12 flex flex-col gap-12">
       <motion.div 
@@ -64,7 +77,7 @@ export default function TripForm() {
                   type="text" 
                   value={destination}
                   onChange={(e) => setDestination(e.target.value)}
-                  placeholder="e.g., Paris, Tokyo" 
+                  placeholder="e.g., Pune, Mumbai" 
                   required
                   className="w-full bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all placeholder:text-zinc-400 dark:text-white"
                 />
@@ -117,13 +130,13 @@ export default function TripForm() {
               {/* Budget */}
               <div className="flex flex-col gap-3">
                 <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-violet-500" /> Total Budget
+                  <IndianRupee className="w-4 h-4 text-violet-500" /> Total Budget
                 </label>
                 <input 
                   type="number" 
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
-                  placeholder="e.g., 2000" 
+                  placeholder="e.g., 50000" 
                   required
                   className="w-full bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all placeholder:text-zinc-400 dark:text-white"
                 />
@@ -161,30 +174,37 @@ export default function TripForm() {
             className="w-full text-left bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-[32px] p-8 sm:p-12 shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden"
           >
             {/* Budget Reality Check */}
-            <div className="mb-12 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-6 rounded-r-2xl">
+            <motion.div variants={itemVariants} className="mb-12 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-6 rounded-r-2xl">
               <h3 className="flex items-center gap-2 font-bold text-blue-900 dark:text-blue-300 mb-2">
                 <Info className="w-5 h-5" /> Budget Analysis for {people}
               </h3>
               <p className="text-blue-800 dark:text-blue-200 leading-relaxed">
                 {itinerary.budgetAnalysis}
               </p>
-            </div>
+            </motion.div>
 
             {/* Local Culture */}
-            <div className="mb-16">
+            <motion.div variants={itemVariants} className="mb-16">
               <CultureCard culture={itinerary.localCulture} />
-            </div>
+            </motion.div>
 
             {/* Hotels */}
-            <h2 className="text-3xl font-bold mb-6 text-zinc-900 dark:text-white">Where to Stay</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+            <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-6 text-zinc-900 dark:text-white">Where to Stay</motion.h2>
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
+            >
               {itinerary.hotels.map((hotel, idx) => (
-                <HotelCard key={idx} hotel={hotel} />
+                <motion.div variants={itemVariants} key={idx}>
+                  <HotelCard hotel={hotel} />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             {/* Daily Itinerary */}
-            <h2 className="text-3xl font-bold mb-8 text-zinc-900 dark:text-white">Your Itinerary</h2>
+            <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-8 text-zinc-900 dark:text-white">Your Itinerary</motion.h2>
             <div className="flex flex-col gap-12">
               {itinerary.itinerary.map((day) => (
                 <DayTimeline key={day.day} dayData={day} />
