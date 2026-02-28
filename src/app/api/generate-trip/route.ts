@@ -28,10 +28,11 @@ export async function POST(req: NextRequest) {
     1. Introduction (budgetAnalysis): Explain if ₹${budget} across ${people} people for ${days} days is highly realistic, tight, or luxurious for this destination.
     2. Accommodation (hotels): Recommend 3 specific hotels or residential neighborhoods fitting the budget.
        - They MUST be centrally located and near a major public transit/metro line, not on the remote outskirts.
-       - Include price per night (in ₹), real rating, and a short address/area name.
+       - Include price per night (in ₹), real rating, short address/area name, and accurate geoCoordinates (lat, lng).
     3. Day-by-day Breakdown (itinerary):
        - IMPORTANT: Start Day 1 routing from the HIGHEST RATED hotel among the options you just recommended.
        - Group locations logically to minimize travel time. Include activity/meal costs (in ₹) for all ${people} people.
+       - Include accurate geoCoordinates (lat, lng) for every single place to allow map plotting.
        - IMPORTANT 'transportToNext' Logic: Provide the EXACT mode of travel from the PREVIOUS place (or from the highest-rated hotel for the first place).
          - If distance < 1km: Suggest "Walk (X mins)". Cost = ₹0.
          - If distance > 1km: Suggest "Metro/Local Bus (X mins)". Give the cost in ₹.
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
     {
       "budgetAnalysis": "Brief statement...",
       "hotels": [
-        { "name": "...", "pricePerNight": 4000, "rating": 4.5, "description": "...", "shortAddress": "Near Metro Station, Area Name" }
+        { "name": "...", "pricePerNight": 4000, "rating": 4.5, "description": "...", "shortAddress": "Near Metro Station, Area Name", "geoCoordinates": { "lat": 18.5204, "lng": 73.8567 } }
       ],
       "itinerary": [
         {
@@ -57,6 +58,7 @@ export async function POST(req: NextRequest) {
               "description": "...",
               "estimatedCost": 1500,
               "rating": 4.8,
+              "geoCoordinates": { "lat": 18.5204, "lng": 73.8567 },
               "transportToNext": "Uber/Auto (15 mins, 3km)",
               "transportCost": 150
             }
