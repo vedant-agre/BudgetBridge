@@ -7,6 +7,7 @@ import { TripData } from "@/types/trip";
 import { HotelCard } from "./HotelCard";
 import { DayTimeline } from "./DayTimeline";
 import { CultureCard } from "./CultureCard";
+import { AIChatBox } from "./AIChatBox";
 
 export default function TripForm() {
   const [destination, setDestination] = useState("");
@@ -224,6 +225,10 @@ export default function TripForm() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Floating AI Chat Assistant */}
+      {itinerary && <AIChatBox tripContext={JSON.stringify(itinerary)} />}
+
     </div>
   );
 }
