@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
          - ONLY if there's no reliable local transport, or splitting an Uber/Auto/Taxi is cheaper for ${people} people, suggest "Uber/Auto/Taxi (X mins)". Give the cost in ₹.
     4. Local Culture (localCulture):
        - foodToTry: List 3 authentic, famous local dishes including a SPECIFIC BRAND or RESTAURANT NAME (e.g., "Jogeshwari Misal in Pune", or "Shauryawada for non-veg").
-       - eventsOrFestivals: List 1-2 local events/festivals happening during this season, or historic places directly tied to local culture.
+       - eventsOrFestivals: List 1-2 local events/festivals happening in the next 1-2 months. You MUST include the exact Dates or Month for planning (e.g., "Ganesh Chaturthi, Sept 7-17").
 
     IMPORTANT FORMATTING OVERRIDE:
     You MUST return your response as a valid JSON object ONLY. All estimated costs and prices MUST be integers (numbers, not strings with currency symbols). Do not wrap it in markdown block quotes. Use the EXACT following schema structure:

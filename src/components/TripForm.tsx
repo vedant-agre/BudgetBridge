@@ -174,22 +174,27 @@ export default function TripForm() {
             className="w-full text-left bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-[32px] p-8 sm:p-12 shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden"
           >
             {/* Budget Reality Check */}
-            <motion.div variants={itemVariants} className="mb-12 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-6 rounded-r-2xl">
-              <h3 className="flex items-center gap-2 font-bold text-blue-900 dark:text-blue-300 mb-2">
-                <Info className="w-5 h-5" /> Budget Analysis for {people}
-              </h3>
-              <p className="text-blue-800 dark:text-blue-200 leading-relaxed">
-                {itinerary.budgetAnalysis}
-              </p>
-            </motion.div>
-
-            {/* Local Culture */}
-            <motion.div variants={itemVariants} className="mb-16">
-              <CultureCard culture={itinerary.localCulture} />
+            <motion.div 
+              variants={itemVariants} 
+              className="mb-14 relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 sm:p-10 shadow-xl shadow-blue-900/20"
+            >
+              <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                <IndianRupee className="w-48 h-48 rotate-12 -translate-y-12 translate-x-8" />
+              </div>
+              <div className="relative z-10">
+                <h3 className="flex items-center gap-2 font-bold text-white text-2xl mb-4">
+                  <Info className="w-6 h-6 text-blue-200" /> Budget Check for {people} Travelers
+                </h3>
+                <p className="text-blue-50 text-lg leading-relaxed max-w-3xl">
+                  {itinerary.budgetAnalysis}
+                </p>
+              </div>
             </motion.div>
 
             {/* Hotels */}
-            <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-6 text-zinc-900 dark:text-white">Where to Stay</motion.h2>
+            <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-6 text-zinc-900 dark:text-white flex items-center gap-3">
+              Where to Stay
+            </motion.h2>
             <motion.div 
               variants={containerVariants}
               initial="hidden"
@@ -197,7 +202,7 @@ export default function TripForm() {
               className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
             >
               {itinerary.hotels.map((hotel, idx) => (
-                <motion.div variants={itemVariants} key={idx}>
+                <motion.div variants={itemVariants} key={idx} className="h-full">
                   <HotelCard hotel={hotel} />
                 </motion.div>
               ))}
@@ -205,11 +210,16 @@ export default function TripForm() {
 
             {/* Daily Itinerary */}
             <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-8 text-zinc-900 dark:text-white">Your Itinerary</motion.h2>
-            <div className="flex flex-col gap-12">
+            <div className="flex flex-col gap-12 mb-16">
               {itinerary.itinerary.map((day) => (
                 <DayTimeline key={day.day} dayData={day} />
               ))}
             </div>
+
+            {/* Local Culture (Moved to bottom) */}
+            <motion.div variants={itemVariants} className="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+              <CultureCard culture={itinerary.localCulture} />
+            </motion.div>
 
           </motion.div>
         )}
