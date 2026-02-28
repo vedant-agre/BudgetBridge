@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌉 BudgetBridge: Intelligent Trip Planning on Your Terms
 
-## Getting Started
+**BudgetBridge** is a streamlined travel assistant that creates custom itineraries based strictly on your financial boundaries. By combining **Gemini 2.5 Flash** with **Live Google Maps Grounding**, it ensures every recommendation—from hotels to street food—fits your specific budget.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 The Core Experience
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **Hard Budget Constraints:** You tell the app exactly what you want to spend. BudgetBridge divides that into a daily allowance and filters the world to match.
+* **Live Maps Intelligence:** Unlike static travel guides, BudgetBridge pulls real-time ratings, price levels ($, $$, $$$), and locations directly from Google Maps.
+* **Smart Clustering:** No more zig-zagging across the city. The AI groups activities by neighborhood to save you money on transport and time on the road.
+* **Vibe Check:** The system analyzes user reviews to ensure "budget-friendly" doesn't mean "low quality."
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+* **AI Orchestration:** [Google Antigravity](https://github.com/google/antigravity)
+* **LLM:** Gemini 2.5 Flash
+* **Data Engine:** Google Maps Grounding (via Google GenAI SDK)
+* **UI Framework:** Streamlit (Pure Python)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
