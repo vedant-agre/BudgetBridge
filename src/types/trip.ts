@@ -1,15 +1,9 @@
-export interface GeoCoordinates {
-  lat: number;
-  lng: number;
-}
-
 export interface Hotel {
   name: string;
   pricePerNight: number;
   rating: number;
   description: string;
   shortAddress: string;
-  geoCoordinates: GeoCoordinates;
 }
 
 export interface Place {
@@ -19,7 +13,6 @@ export interface Place {
   rating: number;
   transportToNext: string;
   transportCost: number;
-  geoCoordinates: GeoCoordinates;
 }
 
 export interface ItineraryDay {

@@ -3,7 +3,8 @@ import { Star, Bed, MapPin, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function HotelCard({ hotel }: { hotel: Hotel }) {
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${hotel.geoCoordinates?.lat},${hotel.geoCoordinates?.lng}`;
+  const mapsQuery = encodeURIComponent(`${hotel.name} ${hotel.shortAddress}`);
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
   return (
     <motion.div 
