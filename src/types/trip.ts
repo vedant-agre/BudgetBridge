@@ -20,8 +20,14 @@ export interface ItineraryDay {
   places: Place[];
 }
 
+export interface LocalCulture {
+  foodToTry: string[];
+  eventsOrFestivals: string[];
+}
+
 export interface TripData {
   budgetAnalysis: string;
   hotels: Hotel[];
   itinerary: ItineraryDay[];
+  localCulture: LocalCulture;
 }

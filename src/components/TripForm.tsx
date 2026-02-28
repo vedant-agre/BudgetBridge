@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Calendar, DollarSign, Sparkles, Loader2, Info } from "lucide-react";
+import { MapPin, Calendar, DollarSign, Sparkles, Loader2, Info, Users } from "lucide-react";
 import { TripData } from "@/types/trip";
 import { HotelCard } from "./HotelCard";
 import { DayTimeline } from "./DayTimeline";
+import { CultureCard } from "./CultureCard";
 
 export default function TripForm() {
   const [destination, setDestination] = useState("");
   const [days, setDays] = useState("3");
   const [budget, setBudget] = useState("");
+  const [people, setPeople] = useState("2");
   const [isLoading, setIsLoading] = useState(false);
   const [itinerary, setItinerary] = useState<TripData | null>(null);
 
@@ -23,7 +25,7 @@ export default function TripForm() {
       const response = await fetch("/api/generate-trip", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ destination, days, budget }),
+        body: JSON.stringify({ destination, days, budget, people }),
       });
 
       const data = await response.json();
@@ -52,7 +54,7 @@ export default function TripForm() {
         <div className="bg-white/80 dark:bg-black/40 rounded-[22px] p-6 sm:p-10 backdrop-blur-md">
           <form onSubmit={handleSubmit} className="flex flex-col gap-8">
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Destination */}
               <div className="flex flex-col gap-3">
                 <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
@@ -62,7 +64,7 @@ export default function TripForm() {
                   type="text" 
                   value={destination}
                   onChange={(e) => setDestination(e.target.value)}
-                  placeholder="e.g., Paris, Tokyo, Bali" 
+                  placeholder="e.g., Paris, Tokyo" 
                   required
                   className="w-full bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all placeholder:text-zinc-400 dark:text-white"
                 />
@@ -90,16 +92,38 @@ export default function TripForm() {
                 </div>
               </div>
 
+              {/* People */}
+              <div className="flex flex-col gap-3">
+                <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-pink-500" /> Travelers
+                </label>
+                <div className="relative">
+                  <input 
+                    type="number" 
+                    min="1"
+                    max="20"
+                    value={people}
+                    onChange={(e) => setPeople(e.target.value)}
+                    placeholder="2" 
+                    required
+                    className="w-full bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all dark:text-white"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm pointer-events-none">
+                    people
+                  </span>
+                </div>
+              </div>
+
               {/* Budget */}
               <div className="flex flex-col gap-3">
                 <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-violet-500" /> Budget
+                  <DollarSign className="w-4 h-4 text-violet-500" /> Total Budget
                 </label>
                 <input 
                   type="number" 
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
-                  placeholder="e.g., 1500" 
+                  placeholder="e.g., 2000" 
                   required
                   className="w-full bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all placeholder:text-zinc-400 dark:text-white"
                 />
@@ -108,7 +132,7 @@ export default function TripForm() {
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
               <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-sm">
-                We'll use real data to ensure your activities and local transit fit within this budget.
+                We'll split this budget across all {people || 1} travelers to build realistic transit & hotel rules.
               </p>
               <button 
                 type="submit"
@@ -139,11 +163,16 @@ export default function TripForm() {
             {/* Budget Reality Check */}
             <div className="mb-12 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-6 rounded-r-2xl">
               <h3 className="flex items-center gap-2 font-bold text-blue-900 dark:text-blue-300 mb-2">
-                <Info className="w-5 h-5" /> Budget Analysis
+                <Info className="w-5 h-5" /> Budget Analysis for {people}
               </h3>
               <p className="text-blue-800 dark:text-blue-200 leading-relaxed">
                 {itinerary.budgetAnalysis}
               </p>
+            </div>
+
+            {/* Local Culture */}
+            <div className="mb-16">
+              <CultureCard culture={itinerary.localCulture} />
             </div>
 
             {/* Hotels */}

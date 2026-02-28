@@ -5,9 +5,9 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(req: NextRequest) {
   try {
-    const { destination, days, budget } = await req.json();
+    const { destination, days, budget, people } = await req.json();
 
-    if (!destination || !days || !budget) {
+    if (!destination || !days || !budget || !people) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -15,22 +15,27 @@ export async function POST(req: NextRequest) {
     }
 
     const prompt = `
-    You are an expert, realistic AI travel planner. Your job is to create a highly accurate, day-by-day travel itinerary. 
-    You MUST prioritize the user's budget and ensure the places and prices you recommend are factual, open, and realistic as of today.
+    You are an expert, highly realistic AI travel planner. Your job is to create an accurate, day-by-day itinerary. 
+    You MUST prioritize the user's budget and ensure places, prices, and events are factual and realistic as of today.
 
     USER REQUEST:
     - Destination: ${destination}
     - Duration: ${days} days
-    - Budget: $${budget} (Total for all days, excluding flights from their origin, but INCLUDING local hotels, food, and local activities/transit)
+    - Number of People: ${people}
+    - Budget: $${budget} (Total budget for all ${people} people combined. Excludes initial flights, but INCLUDING local hotels, food, and local transit. Divide appropriately to see if realistic!)
 
     INSTRUCTIONS FOR ITINERARY:
-    1. Introduction (budgetAnalysis): Briefly explain if the budget is highly realistic, tight, or luxurious for this destination.
-    2. Accommodation (hotels): Recommend 2 specific, real hotels or neighborhoods that fit the budget. Give the estimated price per night and their real rating.
+    1. Introduction (budgetAnalysis): Explain if $${budget} across ${people} people for ${days} days is highly realistic, tight, or luxurious for this destination.
+    2. Accommodation (hotels): Recommend 2 specific hotels or neighborhoods fitting the budget. Include price per night and real rating. If budget is tight for ${people} people, suggest an Airbnb/Apartment instead.
     3. Day-by-day Breakdown (itinerary):
-       - Give logically grouped locations to minimize travel time on a single day.
-       - Include estimated costs for activities and average meals for that day.
-       - For 'transportToNext', provide the mode of travel, estimated time, and distance from the PREVIOUS place (or from the hotel for the first place of the day).
-       - DO NOT include massive travel expenses from the user's home country (e.g., flight to Paris). Only include local transit.
+       - Group locations logically to minimize travel time. Include activity/meal costs for all ${people} people.
+       - IMPORTANT 'transportToNext' Logic: Provide the EXACT mode of travel from the PREVIOUS place.
+         - If distance < 1km: Suggest "Walk (X mins)". Cost = 0.
+         - If distance > 1km: Suggest "Metro/Bus (X mins)". Give the cost.
+         - ONLY if there's no metro, or splitting an Uber/Taxi is cheaper for ${people} people than individual tickets, suggest "Uber/Taxi (X mins)".
+    4. Local Culture (localCulture):
+       - foodToTry: List 3 authentic, famous local dishes (e.g., if Pune: "Misal Pav", "Vada Pav").
+       - eventsOrFestivals: List 1-2 local events/festivals happening during this season, or historic places directly tied to local culture.
 
     IMPORTANT FORMATTING OVERRIDE:
     You MUST return your response as a valid JSON object ONLY. Do not wrap it in markdown block quotes. Use the EXACT following schema structure:
@@ -54,7 +59,11 @@ export async function POST(req: NextRequest) {
             }
           ]
         }
-      ]
+      ],
+      "localCulture": {
+        "foodToTry": ["Dish 1", "Dish 2"],
+        "eventsOrFestivals": ["Event 1"]
+      }
     }
     `;
 
